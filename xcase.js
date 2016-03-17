@@ -36,46 +36,46 @@ function factory() {
     return string.slice(0, 1).toUpperCase() + string.slice(1);
   }
 
-  function change(string, separator, initial, each) {
+  function convert(string, separator, initial, each) {
     return initial(space(string)).replace(WORDS_RE, function (m, a, b) {
       return a + separator + each(b);
     });
   }
 
   function camel(string) {
-    return change(string, '', identity, uc, identity);
+    return convert(string, '', identity, uc);
   }
 
   function constant(string) {
-    return uc(change(string, '_', identity, identity));
+    return uc(convert(string, '_', identity, identity));
   }
 
   function dot(string) {
-    return change(string, '.', identity, identity, identity);
+    return convert(string, '.', identity, identity);
   }
 
   function header(string) {
-    return change(string, '-', uci, uc, identity);
+    return convert(string, '-', uci, uc);
   }
 
   function param(string) {
-    return change(string, '-', identity, identity, identity);
+    return convert(string, '-', identity, identity);
   }
 
   function pascal(string) {
-    return change(string, '', uci, uc, identity);
+    return convert(string, '', uci, uc);
   }
 
   function path(string) {
-    return change(string, '/', identity, identity, identity);
+    return convert(string, '/', identity, identity);
   }
 
   function sentence(string) {
-    return change(string, ' ', uci, identity, identity);
+    return convert(string, ' ', uci, identity);
   }
 
   function snake(string) {
-    return change(string, '_', identity, identity, identity);
+    return convert(string, '_', identity, identity);
   }
 
   function space(string) {
@@ -95,7 +95,7 @@ function factory() {
   }
 
   function title(string) {
-    return change(string, ' ', uci, uc, identity);
+    return convert(string, ' ', uci, uc);
   }
 
   return {
