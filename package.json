@@ -1,0 +1,45 @@
+{
+  "name": "xcase",
+  "version": "0.0.1",
+  "description": "Convert strings between `camel`, `constant`, `dot`, `header`, `param`, `pascal`, `path`, `sentence`, `snake`, `space`, and `title` case.",
+  "main": "xcase.js",
+  "directories": {
+    "test": "test"
+  },
+  "dependencies": {},
+  "devDependencies": {
+    "actually": "git+https://github.com/mikol/actually.git",
+    "criteria": "git+https://github.com/mikol/criteria.git",
+    "matches": "git+https://github.com/mikol/matches.git"
+  },
+  "scripts": {
+    "test": "./node_modules/criteria/bin/criteria test"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/mikol/xcase.git"
+  },
+  "keywords": [
+    "camelCase",
+    "CONSTANT_CASE",
+    "dot.case",
+    "Header-Case",
+    "param-case",
+    "PascalCase",
+    "path/case",
+    "Sentence case",
+    "snake_case",
+    "space case",
+    "Title Case"
+  ],
+  "author": {
+    "name": "Mikol Graves",
+    "email": "mikol@thinbox.org",
+    "url": "https://mikol.github.io/"
+  },
+  "license": "CC-BY-SA-4.0",
+  "bugs": {
+    "url": "https://github.com/mikol/xcase/issues"
+  },
+  "homepage": "https://github.com/mikol/xcase#readme"
+}
