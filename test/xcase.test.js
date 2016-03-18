@@ -268,6 +268,25 @@ function factory(xcase, actually, matches) {
     function () {
       actually(matches, i18nExpected.title, xcase.title(i18nPascalCaseString));
     });
+
+    test('`xcase.space()` with numbers.',
+    function () {
+      actually(matches, 'test 123', xcase.space('test123'));
+      actually(matches, 'a test string 123', xcase.space('a--testString123'));
+      actually(matches, 'a test 123 strîng', xcase.space('aTest123Strîng'));
+      actually(matches, 'version 0_1_2_3_4', xcase.space('version 0.1.2.3.4'));
+      actually(matches, 'version 1_23_456', xcase.space('version/1..23__456'));
+      actually(matches, 'version 1_2_34_56', xcase.space('version_1.2/34:56'));
+    });
+
+    test('`xcase.pascal()` with numbers.',
+    function () {
+      actually(matches, 'ATestString123', xcase.pascal('a--testString123'));
+      actually(matches, 'ATest123Strîng', xcase.pascal('aTest123strîng'));
+      actually(matches, 'Version0_1_2_3_4', xcase.pascal('version 0.1.2.3.4'));
+      actually(matches, 'Version1_23_456', xcase.pascal('version/1..23__456'));
+      actually(matches, 'Version1_2_34_56', xcase.pascal('version_1.2/34:56'));
+    });
   });
 }
 

@@ -19,12 +19,15 @@ var dependencies = [];
 
 function factory() {
   /* jscs:disable maximumLineLength */
-  var LC = 'a-zß-öǿø-ÿg̃āăċēğġĩīıĳŀōőœşšţũūűŵŷžșțḃḋḟṁṡṫẁẃẽỹα-ωąćęłńóśźżа-яàáâãèéêìíòóôõùúýăđĩũơưạảấầẩẫậắằẳẵặẹẻẽếềểễệỉịọỏốồổỗộớờởỡợụủứừửữựỳỵỷỹ';
-  var UC = 'A-ZÀ-ÖǾØ-ÞŸG̃ĀĂĊĒĞĠĨĪİĲĿŌŐŒŞŠŢŨŪŰŴŶŽȘȚḂḊḞṀṠṪẀẂẼỸΑ-ΡΣ-ΩĄĆĘŁŃÓŚŹŻА-ЯÀÁÂÃÈÉÊÌÍÒÓÔÕÙÚÝĂĐĨŨƠƯẠẢẤẦẨẪẬẮẰẲẴẶẸẺẼẾỀỂỄỆỈỊỌỎỐỒỔỖỘỚỜỞỠỢỤỦỨỪỬỮỰỲỴỶỸ';
-  /* jscs:enable maximumLineLength */
+  var LC = 'a-zß-öǿø-ÿа-яα-ωāăąćċđēęğġĩīıĳŀłńōőœśşšţũūűŵŷźżžơưșț̃ḃḋḟṁṡṫẁẃạảấầẩẫậắằẳẵặẹẻẽếềểễệỉịọỏốồổỗộớờởỡợụủứừửữựỳỵỷỹ';
+  var UC = 'A-ZÀ-ÖǾØ-ÞŸА-ЯΑ-ΡΣ-ΩĀĂĄĆĊĐĒĘĞĠĨĪİĲĿŁŃŌŐŒŚŞŠŢŨŪŰŴŶŹŻŽƠƯȘȚ̃ḂḊḞṀṠṪẀẂẠẢẤẦẨẪẬẮẰẲẴẶẸẺẼẾỀỂỄỆỈỊỌỎỐỒỔỖỘỚỜỞỠỢỤỦỨỪỬỮỰỲỴỶỸ';
   var CASE_SEPARATOR_RE = new RegExp('([' + LC + '])([' + UC + '])', 'g');
-  var NON_ALPHANUMERIC_RE = new RegExp('[^0-9' + LC + UC + ']+', 'g');
-  var WORDS_RE = /([^ ]) ([^ ])/g;
+  var NON_ALPHANUMERIC_RE = new RegExp('[^\\d' + LC + UC + ']+', 'g');
+  var NUMBERS_RE = /(\d) (?=\d)/g;
+  var NUMBERS_LEFT_RE = new RegExp('([' + LC + UC + '])(\\d+)', 'g');
+  var NUMBERS_RIGHT_RE = new RegExp('(\\d+)([' + LC + UC + '])', 'g');
+  var WORDS_RE = / (.)/g;
+  /* jscs:enable maximumLineLength */
 
   var uc = ''.toUpperCase.call.bind(''.toUpperCase);
 
@@ -37,9 +40,10 @@ function factory() {
   }
 
   function convert(string, separator, initial, each) {
-    return initial(space(string)).replace(WORDS_RE, function (m, a, b) {
-      return a + separator + each(b);
-    });
+    return initial(space(string))
+      .replace(WORDS_RE, function (m, $1) {
+        return separator + each($1);
+      });
   }
 
   function camel(string) {
@@ -47,11 +51,11 @@ function factory() {
   }
 
   function constant(string) {
-    return uc(convert(string, '_', identity, identity));
+    return uc(space(string, '_'));
   }
 
   function dot(string) {
-    return convert(string, '.', identity, identity);
+    return space(string, '.');
   }
 
   function header(string) {
@@ -59,7 +63,7 @@ function factory() {
   }
 
   function param(string) {
-    return convert(string, '-', identity, identity);
+    return space(string, '-');
   }
 
   function pascal(string) {
@@ -67,7 +71,7 @@ function factory() {
   }
 
   function path(string) {
-    return convert(string, '/', identity, identity);
+    return space(string, '/');
   }
 
   function sentence(string) {
@@ -75,21 +79,25 @@ function factory() {
   }
 
   function snake(string) {
-    return convert(string, '_', identity, identity);
+    return space(string, '_');
   }
 
-  function space(string) {
+  function space(string, separator) {
     if (string == null) {
       return '';
     }
 
+    if (separator == null) {
+      separator = ' ';
+    }
+
+    var replacement = '$1' + separator + '$2';
     return ('' + string)
-      .replace(CASE_SEPARATOR_RE, function (m, $1, $2) {
-        return $1 + ' ' + $2;
-      })
-      .replace(NON_ALPHANUMERIC_RE, function () {
-        return ' ';
-      })
+      .replace(CASE_SEPARATOR_RE, replacement)
+      .replace(NON_ALPHANUMERIC_RE, separator)
+      .replace(NUMBERS_LEFT_RE, replacement)
+      .replace(NUMBERS_RIGHT_RE, replacement)
+      .replace(NUMBERS_RE, '$1_')
       .replace(/^\s+|\s+$/, '')
       .toLowerCase();
   }
