@@ -14,7 +14,6 @@
 
 'use strict';
 
-var id = 'xcase';
 var dependencies = [];
 
 function factory() {
@@ -96,8 +95,6 @@ function factory() {
 // -----------------------------------------------------------------------------
 var n = dependencies.length;
 var o = 'object';
-var r = /([^-_\s])[-_\s]+([^-_\s])/g;
-function s(m, a, b) { return a + b.toUpperCase(); }
 context = typeof global === o ? global : typeof window === o ? window : context;
 if (typeof define === 'function' && define.amd) {
   define(dependencies, function () {
@@ -108,6 +105,6 @@ if (typeof define === 'function' && define.amd) {
   module.exports = factory.apply(context, dependencies);
 } else {
   for (; n--;) { dependencies[n] = context[dependencies[n]]; }
-  context[id.replace(r, s)] = factory.apply(context, dependencies);
+  context.xcase = factory.apply(context, dependencies);
 }
 }(this));
